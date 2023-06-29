@@ -9,7 +9,6 @@ interface CircleSourceProps {
   sourceColor: number[];
 }
 function CircleSource(props: CircleSourceProps) {
-  console.log(props.sourceColor);
   return (
     <div
       className="circleSource"

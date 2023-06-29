@@ -1,4 +1,4 @@
-import GridSquare from "./SquareTile";
+import SquareTile from "./SquareTile";
 import CircleSource from "./CircleSource";
 import { useState, MouseEvent } from "react";
 interface GridProps {
@@ -6,12 +6,13 @@ interface GridProps {
   gridWidth: number;
 }
 
-const COLOUR = {
+const COLOR = {
   RED: [255, 0, 0],
   GREEN: [0, 255, 0],
   BLUE: [0, 0, 255],
+  DEFAULT_BLACK: [0, 0, 0],
 };
-Object.freeze(COLOUR); //Prevent override of Keys
+Object.freeze(COLOR); //Prevent override of Keys
 
 /***
  * This component creates game layout with the circle and square tiles
@@ -23,7 +24,7 @@ function ColourGrid(props: GridProps) {
   const updateMap = (k: string, v: number[]) => {
     setSourceMap(new Map(sourceMap.set(k, v)));
   };
-  const createCirclesHorizontal = (rowId: number) => {
+  const createSourceRow = (rowId: number) => {
     const gridElements = [];
     for (let i = 1; i < props.gridWidth; i++) {
       gridElements.push(
@@ -37,10 +38,10 @@ function ColourGrid(props: GridProps) {
     }
     return gridElements;
   };
-  const createGridRow = (rowId: number) => {
+  const createTileRow = (rowId: number) => {
     const gridElements = [];
     for (let i = 1; i < props.gridWidth; i++) {
-      gridElements.push(<GridSquare rowId={rowId} colId={i} />);
+      gridElements.push(<SquareTile rowId={rowId} colId={i} />);
     }
     return gridElements;
   };
@@ -57,24 +58,24 @@ function ColourGrid(props: GridProps) {
 
   const getSourceColour = (rowId: number, colId: number) => {
     let mapKey = getKey(rowId, colId);
-    return sourceMap.get(mapKey);
+    return sourceMap.get(mapKey) ? sourceMap.get(mapKey) : COLOR.DEFAULT_BLACK;
   };
 
   const sourceClick = (rowId: number, colId: number): void => {
     switch (moveCount) {
       case 1:
         // set to red
-        fillSource(rowId, colId, COLOUR.RED);
+        fillSource(rowId, colId, COLOR.RED);
         setMoveCount(moveCount + 1);
         break;
       case 2:
         // set to green
-        fillSource(rowId, colId, COLOUR.GREEN);
+        fillSource(rowId, colId, COLOR.GREEN);
         setMoveCount(moveCount + 1);
         break;
       case 3:
         // set to blue
-        fillSource(rowId, colId, COLOUR.BLUE);
+        fillSource(rowId, colId, COLOR.BLUE);
         setMoveCount(moveCount + 1);
         break;
 
@@ -83,7 +84,7 @@ function ColourGrid(props: GridProps) {
     }
   };
 
-  const createSquareRows = () => {
+  const createSourceTileRows = () => {
     const gridElements = [];
     for (let i = 1; i < props.gridHeight; i++) {
       gridElements.push(
@@ -94,7 +95,7 @@ function ColourGrid(props: GridProps) {
             handleSourceClick={sourceClick}
             sourceColor={getSourceColour(i, 0)}
           />
-          {createGridRow(i)}
+          {createTileRow(i)}
           <CircleSource
             rowId={i}
             colId={props.gridWidth}
@@ -110,9 +111,9 @@ function ColourGrid(props: GridProps) {
   /** Note the top and bottom row only has circles Tiles, so we use the createCirclesHorizontal, first and last  */
   return (
     <div>
-      <div>{createCirclesHorizontal(0)}</div>
-      {createSquareRows()}
-      <div>{createCirclesHorizontal(props.gridHeight)}</div>
+      <div>{createSourceRow(0)}</div>
+      {createSourceTileRows()}
+      <div>{createSourceRow(props.gridHeight)}</div>
     </div>
   );
 }
