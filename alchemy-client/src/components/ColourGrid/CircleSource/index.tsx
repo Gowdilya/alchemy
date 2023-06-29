@@ -1,17 +1,17 @@
 import Circle from "../../BasicShapes/Circle";
-import "./borderCircle.css";
+import "./circleSource.css";
 
-interface BorderCircleProps {
+interface CircleSourceProps {
   colId: number;
   rowId: number;
 }
-function BorderCircle(props: BorderCircleProps) {
+function CircleSource(props: CircleSourceProps) {
   console.log("colID:" + props.colId + "rowID:" + props.rowId);
   return (
-    <div className="borderCircle">
+    <div className="circleSource">
       <Circle />
     </div>
   );
 }
 
-export default BorderCircle;
+export default CircleSource;

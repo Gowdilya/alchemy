@@ -1,17 +1,17 @@
 import Square from "../../BasicShapes/Square";
-import "./gridSquare.css";
+import "./squareTile.css";
 
-interface GridSquareProps {
+interface SquareTileProps {
   colId: number;
   rowId: number;
 }
-function GridSquare(props: GridSquareProps) {
+function SquareTile(props: SquareTileProps) {
   console.log("colID:" + props.colId + "rowID:" + props.rowId);
   return (
-    <div className="gridSquare">
+    <div className="squareTile">
       <Square />
     </div>
   );
 }
 
-export default GridSquare;
+export default SquareTile;

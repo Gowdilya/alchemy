@@ -1,15 +1,17 @@
-import GridSquare from "./GridSquare";
-import BorderCircle from "./BorderCircle";
+import GridSquare from "./SquareTile";
+import CircleSource from "./CircleSource";
 interface GridProps {
   gridHeight: number;
   gridWidth: number;
 }
-
+/***
+ * This component creates game layout with the circle and square tiles
+ */
 function ColourGrid(props: GridProps) {
   const createCirclesHorizontal = (rowId: number) => {
     const gridElements = [];
     for (let i = 1; i < props.gridWidth; i++) {
-      gridElements.push(<BorderCircle rowId={rowId} colId={i} />);
+      gridElements.push(<CircleSource rowId={rowId} colId={i} />);
     }
     return gridElements;
   };
@@ -26,9 +28,9 @@ function ColourGrid(props: GridProps) {
     for (let i = 1; i < props.gridHeight; i++) {
       gridElements.push(
         <div>
-          <BorderCircle rowId={i} colId={0} />
+          <CircleSource rowId={i} colId={0} />
           {createGridRow(i)}
-          <BorderCircle rowId={i} colId={props.gridWidth} />
+          <CircleSource rowId={i} colId={props.gridWidth} />
         </div>
       );
     }
@@ -36,9 +38,9 @@ function ColourGrid(props: GridProps) {
   };
 
   console.log(props);
+  /** Note the top and bottom row only has circles Tiles, so we use the createCirclesHorizontal, first and last  */
   return (
     <div>
-      Colour Grid
       <div>{createCirclesHorizontal(0)}</div>
       {createSquareRows()}
       <div>{createCirclesHorizontal(props.gridHeight)}</div>
