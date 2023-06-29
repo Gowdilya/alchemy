@@ -5,6 +5,14 @@ interface GridProps {
   gridHeight: number;
   gridWidth: number;
 }
+
+const COLOUR = {
+  RED: [255, 0, 0],
+  GREEN: [0, 255, 0],
+  BLUE: [0, 0, 255],
+};
+Object.freeze(COLOUR); //Prevent override of Keys
+
 /***
  * This component creates game layout with the circle and square tiles
  */
@@ -23,7 +31,7 @@ function ColourGrid(props: GridProps) {
           rowId={rowId}
           colId={i}
           handleSourceClick={sourceClick}
-          sourceColor={sourceMap.get(rowId.toString() + "|" + i.toString())}
+          sourceColor={getSourceColour(rowId, i)}
         />
       );
     }
@@ -37,21 +45,36 @@ function ColourGrid(props: GridProps) {
     return gridElements;
   };
 
+  const getKey = (rowId: number, colId: number) => {
+    return rowId.toString() + "|" + colId.toString();
+  };
+
+  // update Map of corresponding source, with  color
+  const fillSource = (rowId: number, colId: number, color: number[]) => {
+    let mapKey = getKey(rowId, colId);
+    updateMap(mapKey, color);
+  };
+
+  const getSourceColour = (rowId: number, colId: number) => {
+    let mapKey = getKey(rowId, colId);
+    return sourceMap.get(mapKey);
+  };
+
   const sourceClick = (rowId: number, colId: number): void => {
     switch (moveCount) {
       case 1:
         // set to red
-        updateMap(rowId.toString() + "|" + colId.toString(), [255, 0, 0]);
+        fillSource(rowId, colId, COLOUR.RED);
         setMoveCount(moveCount + 1);
         break;
       case 2:
         // set to green
-        updateMap(rowId.toString() + "|" + colId.toString(), [0, 255, 0]);
+        fillSource(rowId, colId, COLOUR.GREEN);
         setMoveCount(moveCount + 1);
         break;
       case 3:
         // set to blue
-        updateMap(rowId.toString() + "|" + colId.toString(), [0, 0, 255]);
+        fillSource(rowId, colId, COLOUR.BLUE);
         setMoveCount(moveCount + 1);
         break;
 
@@ -69,16 +92,14 @@ function ColourGrid(props: GridProps) {
             rowId={i}
             colId={0}
             handleSourceClick={sourceClick}
-            sourceColor={sourceMap.get(i.toString() + "|" + "0")}
+            sourceColor={getSourceColour(i, 0)}
           />
           {createGridRow(i)}
           <CircleSource
             rowId={i}
             colId={props.gridWidth}
             handleSourceClick={sourceClick}
-            sourceColor={sourceMap.get(
-              i.toString() + "|" + props.gridWidth.toString()
-            )}
+            sourceColor={getSourceColour(i, props.gridWidth)}
           />
         </div>
       );

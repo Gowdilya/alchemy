@@ -18,7 +18,7 @@ function RGBAlchemy(props: RGBProps) {
       <div>User ID:{props.data.userId}</div>
       <div>Moves left:{props.data.maxMoves}</div>
       <div>
-        Taget color:
+        Target color:
         <Square color={props.data.target} />
       </div>
       Closest color:
