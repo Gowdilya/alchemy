@@ -12,7 +12,6 @@ interface RGBProps {
 }
 
 function RGBAlchemy(props: RGBProps) {
-  console.log(props);
   return (
     <div className="RGB Alchemy">
       <b>RGB Alchemy</b>

@@ -8,7 +8,6 @@ function App() {
   async function logJSONData() {
     const response = await fetch("http://localhost:9876/init");
     const jsonData = await response.json();
-    console.log(jsonData);
     setData(jsonData);
   }
   useEffect(() => {

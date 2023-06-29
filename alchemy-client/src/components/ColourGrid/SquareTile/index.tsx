@@ -6,7 +6,6 @@ interface SquareTileProps {
   rowId: number;
 }
 function SquareTile(props: SquareTileProps) {
-  console.log("colID:" + props.colId + "rowID:" + props.rowId);
   return (
     <div className="squareTile">
       <Square />

@@ -10,7 +10,10 @@ const defaultProps = {
 function Circle(props: CircleProps) {
   props = { ...defaultProps, ...props };
   return (
-    <div className="circle" style={{ background: `rgb(${props.color})` }}></div>
+    <div
+      className="circle"
+      style={{ backgroundColor: `rgb(${props.color})` }}
+    ></div>
   );
 }
 
