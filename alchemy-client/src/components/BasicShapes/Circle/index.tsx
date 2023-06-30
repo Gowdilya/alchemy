@@ -9,7 +9,6 @@ const defaultProps = {
 
 function Circle(props: CircleProps) {
   props = { ...defaultProps, ...props };
-  console.log(props);
   return (
     <div
       className="circle"

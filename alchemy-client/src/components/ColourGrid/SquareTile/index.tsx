@@ -4,7 +4,7 @@ import "./squareTile.css";
 interface SquareTileProps {
   colId: number;
   rowId: number;
-  tileColor: number[];
+  tileColor?: number[];
 }
 function SquareTile(props: SquareTileProps) {
   return (

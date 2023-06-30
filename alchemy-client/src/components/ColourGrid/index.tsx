@@ -68,13 +68,38 @@ function ColourGrid(props: GridProps) {
   };
 
   const getTileColor = (rowId: number, colId: number) => {
-    console.log(sourceMap.keys());
-    let sourceKeys = sourceMap.keys();
+    let tileColor;
+    // had to modify tsconfig to target es6 to Iterate through keys
+    let shinedSource = [];
     for (let key of sourceMap.keys()) {
-      console.log(key);
+      let ids = key.split("|");
+      let sourceRow = ids[0];
+      let sourceCol = ids[1];
+
+      if (sourceRow == rowId || sourceCol == colId) {
+        shinedSource.push({ rowId: sourceRow, colId: sourceCol });
+      }
+    }
+    for (let source of shinedSource) {
+      let ratio;
+      let distance;
+      if (source.rowId == rowId) {
+        distance = Math.abs(source.colId - colId);
+        ratio = (props.gridWidth - distance + 1) / (props.gridWidth + 1);
+      } else {
+        // (source.colId == colId)
+        distance = Math.abs(source.rowId - rowId);
+        ratio = (props.gridHeight - distance + 1) / (props.gridHeight + 1);
+      }
+      let sourceColor = getSourceColor(source.rowId, source.colId);
+      tileColor = [
+        sourceColor[0] * ratio,
+        sourceColor[1] * ratio,
+        sourceColor[2] * ratio,
+      ];
     }
 
-    return [0, 255, 255];
+    return tileColor;
   };
 
   const sourceClick = (rowId: number, colId: number): void => {
