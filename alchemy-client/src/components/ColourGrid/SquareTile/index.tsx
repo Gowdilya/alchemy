@@ -4,11 +4,12 @@ import "./squareTile.css";
 interface SquareTileProps {
   colId: number;
   rowId: number;
+  tileColor: number[];
 }
 function SquareTile(props: SquareTileProps) {
   return (
     <div className="squareTile">
-      <Square />
+      <Square color={props.tileColor} />
     </div>
   );
 }

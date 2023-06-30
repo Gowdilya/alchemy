@@ -32,7 +32,7 @@ function ColourGrid(props: GridProps) {
           rowId={rowId}
           colId={i}
           handleSourceClick={sourceClick}
-          sourceColor={getSourceColour(rowId, i)}
+          sourceColor={getSourceColor(rowId, i)}
         />
       );
     }
@@ -41,7 +41,13 @@ function ColourGrid(props: GridProps) {
   const createTileRow = (rowId: number) => {
     const gridElements = [];
     for (let i = 1; i < props.gridWidth; i++) {
-      gridElements.push(<SquareTile rowId={rowId} colId={i} />);
+      gridElements.push(
+        <SquareTile
+          rowId={rowId}
+          colId={i}
+          tileColor={getTileColor(rowId, i)}
+        />
+      );
     }
     return gridElements;
   };
@@ -56,9 +62,19 @@ function ColourGrid(props: GridProps) {
     updateMap(mapKey, color);
   };
 
-  const getSourceColour = (rowId: number, colId: number) => {
+  const getSourceColor = (rowId: number, colId: number) => {
     let mapKey = getKey(rowId, colId);
     return sourceMap.get(mapKey) ? sourceMap.get(mapKey) : COLOR.DEFAULT_BLACK;
+  };
+
+  const getTileColor = (rowId: number, colId: number) => {
+    console.log(sourceMap.keys());
+    let sourceKeys = sourceMap.keys();
+    for (let key of sourceMap.keys()) {
+      console.log(key);
+    }
+
+    return [0, 255, 255];
   };
 
   const sourceClick = (rowId: number, colId: number): void => {
@@ -93,14 +109,14 @@ function ColourGrid(props: GridProps) {
             rowId={i}
             colId={0}
             handleSourceClick={sourceClick}
-            sourceColor={getSourceColour(i, 0)}
+            sourceColor={getSourceColor(i, 0)}
           />
           {createTileRow(i)}
           <CircleSource
             rowId={i}
             colId={props.gridWidth}
             handleSourceClick={sourceClick}
-            sourceColor={getSourceColour(i, props.gridWidth)}
+            sourceColor={getSourceColor(i, props.gridWidth)}
           />
         </div>
       );
