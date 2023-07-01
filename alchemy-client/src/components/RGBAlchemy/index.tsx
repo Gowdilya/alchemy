@@ -21,7 +21,6 @@ function RGBAlchemy(props: RGBProps) {
         Target color:
         <Square color={props.data.target} />
       </div>
-      Closest color:
       <ColourGrid
         gridWidth={props.data.width}
         gridHeight={props.data.height}

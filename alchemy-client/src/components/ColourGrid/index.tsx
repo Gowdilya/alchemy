@@ -1,6 +1,8 @@
 import SquareTile from "./SquareTile";
 import CircleSource from "./CircleSource";
 import { useState, useMemo } from "react";
+import Square from "../BasicShapes/Square";
+
 interface GridProps {
   gridHeight: number;
   gridWidth: number;
@@ -72,11 +74,12 @@ function ColourGrid(props: GridProps) {
       return;
     }
     const newDelta = calculateDelta(props.targetColor, tileColor);
-    let closestColor = getSourceColor(closestIndex.rowId, closestIndex.colId);
+    let closestColor = getTileColor(closestIndex.rowId, closestIndex.colId);
     if (closestColor) {
       const oldDelta = calculateDelta(props.targetColor, closestColor);
       if (newDelta < oldDelta) {
         setClosestIndex({ rowId: rowId, colId: colId });
+        console.log(newDelta);
       }
     }
   };
@@ -185,12 +188,14 @@ function ColourGrid(props: GridProps) {
         newColor = setTileColor(i, sourceColId);
         mapKey = getKey(i, sourceColId);
         updateTileMap(mapKey, newColor);
+        verifyClosest(newColor, i, sourceColId);
       }
     } else {
       for (let i = 1; i < props.gridWidth; i++) {
         newColor = setTileColor(sourceRowId, i);
         mapKey = getKey(sourceRowId, i);
         updateTileMap(mapKey, newColor);
+        verifyClosest(newColor, sourceRowId, i);
       }
     }
   };
@@ -214,7 +219,8 @@ function ColourGrid(props: GridProps) {
         break;
 
       default:
-      // code block
+        // code block
+        setMoveCount(moveCount + 1);
     }
   };
 
@@ -261,6 +267,10 @@ function ColourGrid(props: GridProps) {
   /** Note the top and bottom row only has circles Tiles, so we use the createCirclesHorizontal, first and last  */
   return (
     <div>
+      <div>
+        Closest color:{" "}
+        <Square color={getTileColor(closestIndex.rowId, closestIndex.colId)} />
+      </div>
       <div>{createSourceRow(0)}</div>
       {createSourceTileRows()}
       <div>{createSourceRow(props.gridHeight)}</div>
