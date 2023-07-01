@@ -5,10 +5,14 @@ interface SquareTileProps {
   colId: number;
   rowId: number;
   tileColor?: number[];
+  isClosest: boolean;
 }
 function SquareTile(props: SquareTileProps) {
   return (
-    <div className="squareTile">
+    <div
+      className={"squareTile"}
+      style={props.isClosest ? { border: `1px solid red` } : {}}
+    >
       <Square color={props.tileColor} />
     </div>
   );

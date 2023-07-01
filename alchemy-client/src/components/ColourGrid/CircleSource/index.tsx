@@ -6,7 +6,7 @@ interface CircleSourceProps {
   rowId: number;
   colId: number;
   handleSourceClick: (rowId: number, colId: number) => void;
-  sourceColor: number[];
+  sourceColor?: number[];
 }
 function CircleSource(props: CircleSourceProps) {
   return (

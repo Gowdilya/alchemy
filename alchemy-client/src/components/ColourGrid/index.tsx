@@ -1,9 +1,15 @@
 import SquareTile from "./SquareTile";
 import CircleSource from "./CircleSource";
-import { useState, MouseEvent } from "react";
+import { useState, useMemo } from "react";
 interface GridProps {
   gridHeight: number;
   gridWidth: number;
+  targetColor: number[];
+}
+
+interface GridCoordinates {
+  rowId: number;
+  colId: number;
 }
 
 const COLOR = {
@@ -19,33 +25,83 @@ Object.freeze(COLOR); //Prevent override of Keys
  */
 function ColourGrid(props: GridProps) {
   const [moveCount, setMoveCount] = useState<number>(1);
-  const [sourceMap, setSourceMap] = useState(new Map());
-  //This is done to trigger a rerender, new Map must be created so the pointer changes
-  const updateMap = (k: string, v: number[]) => {
+  const [sourceMap, setSourceMap] = useState<Map<string, number[]>>(new Map());
+  const [tileMap, setTileMap] = useState<Map<string, number[]>>(new Map());
+  const [closestIndex, setClosestIndex] = useState<GridCoordinates>({
+    rowId: 1,
+    colId: 1,
+  });
+
+  /* 
+  updateFunctions trigger a rerender, new Map must be created so the pointer changes
+  could also use immutable.js(library) instead? 
+  */
+  const updateSourceMap = (k: string, v: number[]) => {
     setSourceMap(new Map(sourceMap.set(k, v)));
   };
-  const createSourceRow = (rowId: number) => {
-    const gridElements = [];
-    for (let i = 1; i < props.gridWidth; i++) {
-      gridElements.push(
-        <CircleSource
-          rowId={rowId}
-          colId={i}
-          handleSourceClick={sourceClick}
-          sourceColor={getSourceColor(rowId, i)}
-        />
-      );
-    }
-    return gridElements;
+
+  const updateTileMap = (k: string, v: number[]) => {
+    setTileMap(new Map(tileMap.set(k, v)));
   };
+
+  //   const handleTileCheck = (tileColor: number[]) => {
+  //     let isClosest = false;
+  //     if (tileColor === closestColor) {
+  //       return true;
+  //     }
+
+  //     const newDelta = calculateDelta(props.targetColor, tileColor);
+  //     if (closestColor && closestColor?.length > 0) {
+  //       console.log("YO", closestColor);
+  //       const oldDelta = calculateDelta(props.targetColor, closestColor);
+  //       if (newDelta < oldDelta) {
+  //         setClosestColor(tileColor);
+  //         console.log("HE");
+  //         isClosest = true;
+  //       }
+  //     } else {
+  //       setClosestColor(tileColor);
+  //       isClosest = true;
+  //       console.log("HO");
+  //     }
+  //     console.log(isClosest);
+  //     return isClosest;
+  //   };
+  const verifyClosest = (tileColor: number[], rowId: number, colId: number) => {
+    if (rowId === closestIndex.rowId && colId === closestIndex.colId) {
+      return;
+    }
+    const newDelta = calculateDelta(props.targetColor, tileColor);
+    let closestColor = getSourceColor(closestIndex.rowId, closestIndex.colId);
+    if (closestColor) {
+      const oldDelta = calculateDelta(props.targetColor, closestColor);
+      if (newDelta < oldDelta) {
+        setClosestIndex({ rowId: rowId, colId: colId });
+      }
+    }
+  };
+  const calculateDelta = (target: number[], obtained: number[]) => {
+    return (
+      (1 / 255) *
+      (1 / Math.sqrt(3)) *
+      Math.sqrt(
+        (target[0] - obtained[0]) ** 2 +
+          (target[1] - obtained[1]) ** 2 +
+          (target[2] - obtained[2]) ** 2
+      )
+    );
+  };
+
   const createTileRow = (rowId: number) => {
     const gridElements = [];
     for (let i = 1; i < props.gridWidth; i++) {
       gridElements.push(
         <SquareTile
+          key={"tile-" + rowId + "-" + i}
           rowId={rowId}
           colId={i}
           tileColor={getTileColor(rowId, i)}
+          isClosest={closestIndex.rowId === rowId && closestIndex.colId === i}
         />
       );
     }
@@ -59,7 +115,8 @@ function ColourGrid(props: GridProps) {
   // update Map of corresponding source, with  color
   const fillSource = (rowId: number, colId: number, color: number[]) => {
     let mapKey = getKey(rowId, colId);
-    updateMap(mapKey, color);
+    updateSourceMap(mapKey, color);
+    fillTile(rowId, colId);
   };
 
   const getSourceColor = (rowId: number, colId: number) => {
@@ -68,6 +125,11 @@ function ColourGrid(props: GridProps) {
   };
 
   const getTileColor = (rowId: number, colId: number) => {
+    let mapKey = getKey(rowId, colId);
+    return tileMap.get(mapKey) ? tileMap.get(mapKey) : COLOR.DEFAULT_BLACK;
+  };
+
+  const setTileColor = (rowId: number, colId: number) => {
     let shineColors = [];
     let newColor: number[] = [0, 0, 0];
     let shineColor;
@@ -75,8 +137,8 @@ function ColourGrid(props: GridProps) {
     let shinedSource = [];
     for (let key of sourceMap.keys()) {
       let ids = key.split("|");
-      let sourceRow = ids[0];
-      let sourceCol = ids[1];
+      let sourceRow = parseInt(ids[0]);
+      let sourceCol = parseInt(ids[1]);
 
       if (sourceRow == rowId || sourceCol == colId) {
         shinedSource.push({ rowId: sourceRow, colId: sourceCol });
@@ -98,12 +160,14 @@ function ColourGrid(props: GridProps) {
         ratio = (props.gridHeight - distance + 1) / (props.gridHeight + 1);
       }
       let sourceColor = getSourceColor(source.rowId, source.colId);
-      shineColor = [
-        sourceColor[0] * ratio,
-        sourceColor[1] * ratio,
-        sourceColor[2] * ratio,
-      ];
-      shineColors.push(shineColor);
+      if (sourceColor) {
+        shineColor = [
+          sourceColor[0] * ratio,
+          sourceColor[1] * ratio,
+          sourceColor[2] * ratio,
+        ];
+        shineColors.push(shineColor);
+      }
     }
     for (let i = 0; i < shineColors.length; i++) {
       newColor[0] += shineColors[i][0];
@@ -111,6 +175,24 @@ function ColourGrid(props: GridProps) {
       newColor[2] += shineColors[i][2];
     }
     return newColor;
+  };
+
+  const fillTile = (sourceRowId: number, sourceColId: number) => {
+    let newColor: number[];
+    let mapKey: string;
+    if (sourceRowId === 0 || sourceRowId === props.gridHeight) {
+      for (let i = 1; i < props.gridHeight; i++) {
+        newColor = setTileColor(i, sourceColId);
+        mapKey = getKey(i, sourceColId);
+        updateTileMap(mapKey, newColor);
+      }
+    } else {
+      for (let i = 1; i < props.gridWidth; i++) {
+        newColor = setTileColor(sourceRowId, i);
+        mapKey = getKey(sourceRowId, i);
+        updateTileMap(mapKey, newColor);
+      }
+    }
   };
 
   const sourceClick = (rowId: number, colId: number): void => {
@@ -134,6 +216,22 @@ function ColourGrid(props: GridProps) {
       default:
       // code block
     }
+  };
+
+  const createSourceRow = (rowId: number) => {
+    const gridElements = [];
+    for (let i = 1; i < props.gridWidth; i++) {
+      gridElements.push(
+        <CircleSource
+          key={"source" + rowId + "-" + i}
+          rowId={rowId}
+          colId={i}
+          handleSourceClick={sourceClick}
+          sourceColor={getSourceColor(rowId, i)}
+        />
+      );
+    }
+    return gridElements;
   };
 
   const createSourceTileRows = () => {
