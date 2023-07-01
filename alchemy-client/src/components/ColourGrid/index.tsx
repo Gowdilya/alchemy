@@ -1,6 +1,6 @@
 import SquareTile from "./SquareTile";
 import CircleSource from "./CircleSource";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Square from "../BasicShapes/Square";
 
 interface GridProps {
@@ -9,6 +9,8 @@ interface GridProps {
   targetColor: number[];
   moveCount: number;
   handleMoveMade: () => void;
+  reload: boolean;
+  handleReloaded: () => void;
 }
 
 const DELTA_CONST = (1 / 255) * (1 / Math.sqrt(3));
@@ -36,6 +38,19 @@ function ColourGrid(props: GridProps) {
     rowId: 1,
     colId: 1,
   });
+
+  // Reset when reload is true
+  useEffect(() => {
+    setSourceMap(new Map());
+    setTileMap(new Map());
+    setClosestIndex({
+      rowId: 1,
+      colId: 1,
+    });
+    props.handleReloaded();
+  }, [props.reload]);
+
+  const allowDrop = props.moveCount > 2;
 
   const calculateDelta = (target: number[], obtained: number[]) => {
     return (
@@ -92,6 +107,7 @@ function ColourGrid(props: GridProps) {
           rowId={rowId}
           colId={i}
           color={getTileColor(rowId, i)}
+          isDraggable={allowDrop}
           isClosest={closestIndex.rowId === rowId && closestIndex.colId === i}
         />
       );
@@ -212,6 +228,11 @@ function ColourGrid(props: GridProps) {
     }
   };
 
+  const sourceDrop = (color: number[], rowId: number, colId: number) => {
+    fillSource(rowId, colId, color);
+    props.handleMoveMade();
+  };
+
   const createSourceRow = (rowId: number) => {
     const gridElements = [];
     for (let i = 1; i < props.gridWidth; i++) {
@@ -222,6 +243,7 @@ function ColourGrid(props: GridProps) {
           colId={i}
           handleSourceClick={sourceClick}
           color={getSourceColor(rowId, i)}
+          handleSourceDrop={sourceDrop}
         />
       );
     }
@@ -238,6 +260,7 @@ function ColourGrid(props: GridProps) {
             colId={0}
             handleSourceClick={sourceClick}
             color={getSourceColor(i, 0)}
+            handleSourceDrop={sourceDrop}
           />
           {createTileRow(i)}
           <CircleSource
@@ -245,6 +268,7 @@ function ColourGrid(props: GridProps) {
             colId={props.gridWidth}
             handleSourceClick={sourceClick}
             color={getSourceColor(i, props.gridWidth)}
+            handleSourceDrop={sourceDrop}
           />
         </div>
       );

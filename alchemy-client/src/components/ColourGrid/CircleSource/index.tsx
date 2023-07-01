@@ -7,11 +7,24 @@ interface CircleSourceProps {
   colId: number;
   handleSourceClick: (rowId: number, colId: number) => void;
   color?: number[];
+  handleSourceDrop: (color: number[], rowId: number, colId: number) => void;
 }
+
 function CircleSource(props: CircleSourceProps) {
+  const enableDropping = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    const newColor = event.dataTransfer.getData("text");
+    var colorArray = newColor.split(",").map(Number);
+    props.handleSourceDrop(colorArray, props.rowId, props.colId);
+  };
+
   return (
     <div
-      title={props.color?.toString()}
+      onDragOver={enableDropping}
+      onDrop={handleDrop}
       className="circleSource"
       onClick={() => props.handleSourceClick(props.rowId, props.colId)}
     >

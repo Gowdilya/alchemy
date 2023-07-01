@@ -6,13 +6,21 @@ interface SquareTileProps {
   rowId: number;
   color?: number[];
   isClosest: boolean;
+  isDraggable: boolean;
 }
 function SquareTile(props: SquareTileProps) {
+  const drag = (event: React.DragEvent<HTMLDivElement>) => {
+    event.dataTransfer.setData(
+      "text",
+      props.color ? props.color?.toString() : ""
+    );
+  };
   return (
     <div
-      title={props.color?.toString()}
+      draggable={props.isDraggable}
+      onDragStart={drag}
       className={"squareTile"}
-      style={props.isClosest ? { border: `1px solid red` } : {}}
+      style={props.isClosest ? { border: `2px solid red` } : {}}
     >
       <Square color={props.color} />
     </div>
