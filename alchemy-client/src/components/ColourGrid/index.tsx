@@ -11,6 +11,7 @@ interface GridProps {
   handleMoveMade: () => void;
 }
 
+const DELTA_CONST = (1 / 255) * (1 / Math.sqrt(3));
 interface GridCoordinates {
   rowId: number;
   colId: number;
@@ -36,6 +37,25 @@ function ColourGrid(props: GridProps) {
     colId: 1,
   });
 
+  const calculateDelta = (target: number[], obtained: number[]) => {
+    return (
+      DELTA_CONST *
+      Math.sqrt(
+        (target[0] - obtained[0]) ** 2 +
+          (target[1] - obtained[1]) ** 2 +
+          (target[2] - obtained[2]) ** 2
+      )
+    );
+  };
+
+  const [delta, setDelta] = useState<number>(
+    calculateDelta(props.targetColor, COLOR.DEFAULT_BLACK)
+  );
+
+  const convertedDelta = () => {
+    return (delta * 100).toFixed(2);
+  };
+
   /* 
   updateFunctions trigger a rerender, new Map must be created so the pointer changes
   could also use immutable.js(library) instead? 
@@ -48,29 +68,6 @@ function ColourGrid(props: GridProps) {
     setTileMap(new Map(tileMap.set(k, v)));
   };
 
-  //   const handleTileCheck = (tileColor: number[]) => {
-  //     let isClosest = false;
-  //     if (tileColor === closestColor) {
-  //       return true;
-  //     }
-
-  //     const newDelta = calculateDelta(props.targetColor, tileColor);
-  //     if (closestColor && closestColor?.length > 0) {
-  //       console.log("YO", closestColor);
-  //       const oldDelta = calculateDelta(props.targetColor, closestColor);
-  //       if (newDelta < oldDelta) {
-  //         setClosestColor(tileColor);
-  //         console.log("HE");
-  //         isClosest = true;
-  //       }
-  //     } else {
-  //       setClosestColor(tileColor);
-  //       isClosest = true;
-  //       console.log("HO");
-  //     }
-  //     console.log(isClosest);
-  //     return isClosest;
-  //   };
   const verifyClosest = (tileColor: number[], rowId: number, colId: number) => {
     if (rowId === closestIndex.rowId && colId === closestIndex.colId) {
       return;
@@ -81,20 +78,9 @@ function ColourGrid(props: GridProps) {
       const oldDelta = calculateDelta(props.targetColor, closestColor);
       if (newDelta < oldDelta) {
         setClosestIndex({ rowId: rowId, colId: colId });
-        console.log(newDelta);
+        setDelta(newDelta);
       }
     }
-  };
-  const calculateDelta = (target: number[], obtained: number[]) => {
-    return (
-      (1 / 255) *
-      (1 / Math.sqrt(3)) *
-      Math.sqrt(
-        (target[0] - obtained[0]) ** 2 +
-          (target[1] - obtained[1]) ** 2 +
-          (target[2] - obtained[2]) ** 2
-      )
-    );
   };
 
   const createTileRow = (rowId: number) => {
@@ -270,8 +256,9 @@ function ColourGrid(props: GridProps) {
   return (
     <div>
       <div>
-        Closest color:{" "}
+        Closest color:
         <Square color={getTileColor(closestIndex.rowId, closestIndex.colId)} />
+        {"\u0394" + "=" + convertedDelta() + "%"}
       </div>
       <div>{createSourceRow(0)}</div>
       {createSourceTileRows()}
