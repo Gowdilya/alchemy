@@ -7,6 +7,8 @@ interface GridProps {
   gridHeight: number;
   gridWidth: number;
   targetColor: number[];
+  moveCount: number;
+  handleMoveMade: () => void;
 }
 
 interface GridCoordinates {
@@ -26,7 +28,7 @@ Object.freeze(COLOR); //Prevent override of Keys
  * This component creates game layout with the circle and square tiles
  */
 function ColourGrid(props: GridProps) {
-  const [moveCount, setMoveCount] = useState<number>(1);
+  // const [moveCount, setMoveCount] = useState<number>(1);
   const [sourceMap, setSourceMap] = useState<Map<string, number[]>>(new Map());
   const [tileMap, setTileMap] = useState<Map<string, number[]>>(new Map());
   const [closestIndex, setClosestIndex] = useState<GridCoordinates>({
@@ -103,7 +105,7 @@ function ColourGrid(props: GridProps) {
           key={"tile-" + rowId + "-" + i}
           rowId={rowId}
           colId={i}
-          tileColor={getTileColor(rowId, i)}
+          color={getTileColor(rowId, i)}
           isClosest={closestIndex.rowId === rowId && closestIndex.colId === i}
         />
       );
@@ -201,26 +203,26 @@ function ColourGrid(props: GridProps) {
   };
 
   const sourceClick = (rowId: number, colId: number): void => {
-    switch (moveCount) {
-      case 1:
+    switch (props.moveCount) {
+      case 0:
         // set to red
         fillSource(rowId, colId, COLOR.RED);
-        setMoveCount(moveCount + 1);
+        props.handleMoveMade();
         break;
-      case 2:
+      case 1:
         // set to green
         fillSource(rowId, colId, COLOR.GREEN);
-        setMoveCount(moveCount + 1);
+        props.handleMoveMade();
         break;
-      case 3:
+      case 2:
         // set to blue
         fillSource(rowId, colId, COLOR.BLUE);
-        setMoveCount(moveCount + 1);
+        props.handleMoveMade();
         break;
 
       default:
-        // code block
-        setMoveCount(moveCount + 1);
+      // code block
+      // props.handleMoveMade();
     }
   };
 
@@ -233,7 +235,7 @@ function ColourGrid(props: GridProps) {
           rowId={rowId}
           colId={i}
           handleSourceClick={sourceClick}
-          sourceColor={getSourceColor(rowId, i)}
+          color={getSourceColor(rowId, i)}
         />
       );
     }
@@ -249,14 +251,14 @@ function ColourGrid(props: GridProps) {
             rowId={i}
             colId={0}
             handleSourceClick={sourceClick}
-            sourceColor={getSourceColor(i, 0)}
+            color={getSourceColor(i, 0)}
           />
           {createTileRow(i)}
           <CircleSource
             rowId={i}
             colId={props.gridWidth}
             handleSourceClick={sourceClick}
-            sourceColor={getSourceColor(i, props.gridWidth)}
+            color={getSourceColor(i, props.gridWidth)}
           />
         </div>
       );

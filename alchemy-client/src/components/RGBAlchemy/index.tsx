@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Square from "../BasicShapes/Square";
 import ColourGrid from "../ColourGrid";
 interface RGBProps {
@@ -12,11 +12,17 @@ interface RGBProps {
 }
 
 function RGBAlchemy(props: RGBProps) {
+  const [moveCount, setMoveCount] = useState<number>(0);
+
+  const handleMovePlus = () => {
+    setMoveCount((moveCount: number) => moveCount + 1);
+  };
+
   return (
     <div className="RGB Alchemy">
       <b>RGB Alchemy</b>
       <div>User ID:{props.data.userId}</div>
-      <div>Moves left:{props.data.maxMoves}</div>
+      <div>Moves left:{props.data.maxMoves - moveCount}</div>
       <div>
         Target color:
         <Square color={props.data.target} />
@@ -25,6 +31,8 @@ function RGBAlchemy(props: RGBProps) {
         gridWidth={props.data.width}
         gridHeight={props.data.height}
         targetColor={props.data.target}
+        moveCount={moveCount}
+        handleMoveMade={handleMovePlus}
       />
     </div>
   );

@@ -11,6 +11,7 @@ function Circle(props: CircleProps) {
   props = { ...defaultProps, ...props };
   return (
     <div
+      title={props.color?.toString()}
       className="circle"
       style={{ backgroundColor: `rgb(${props.color})` }}
     ></div>

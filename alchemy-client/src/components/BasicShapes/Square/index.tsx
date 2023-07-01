@@ -12,6 +12,7 @@ function Square(props: SquareProps) {
   return (
     <div
       className="square"
+      title={props.color?.toString()}
       style={{ backgroundColor: `rgb(${props.color})` }}
     ></div>
   );
