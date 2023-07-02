@@ -2,6 +2,7 @@ import "./square.css";
 
 interface SquareProps {
   color?: number[];
+  selected?: boolean;
 }
 
 const defaultProps = {
@@ -13,7 +14,10 @@ function Square(props: SquareProps) {
     <div
       className="square"
       title={props.color?.toString()}
-      style={{ backgroundColor: `rgb(${props.color})` }}
+      style={{
+        backgroundColor: `rgb(${props.color})`,
+        border: `2px solid ${props.selected ? "red" : "lightgrey"}`,
+      }}
     ></div>
   );
 }
