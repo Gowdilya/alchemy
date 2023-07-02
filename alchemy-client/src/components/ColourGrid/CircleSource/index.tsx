@@ -18,7 +18,7 @@ function CircleSource(props: CircleSourceProps) {
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     const newColor = event.dataTransfer.getData("text");
-    var colorArray = newColor.split(",").map(Number);
+    var colorArray = newColor.split(",").map(Number); // text to number[]
     props.handleSourceDrop(colorArray, props.rowId, props.colId);
   };
 

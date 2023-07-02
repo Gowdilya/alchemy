@@ -32,7 +32,6 @@ Object.freeze(COLOR); //Prevent override of Keys
  * This component creates game layout with the circle and square tiles
  */
 function ColourGrid(props: GridProps) {
-  // const [moveCount, setMoveCount] = useState<number>(1);
   const [sourceMap, setSourceMap] = useState<Map<string, number[]>>(new Map());
   const [tileMap, setTileMap] = useState<Map<string, number[]>>(new Map());
   const [closestIndex, setClosestIndex] = useState<GridCoordinates>({
@@ -128,7 +127,7 @@ function ColourGrid(props: GridProps) {
   const fillSource = (rowId: number, colId: number, color: number[]) => {
     let mapKey = getKey(rowId, colId);
     updateSourceMap(mapKey, color);
-    fillTile(rowId, colId);
+    updateSourceShinedTiles(rowId, colId);
   };
 
   const getSourceColor = (rowId: number, colId: number) => {
@@ -140,13 +139,14 @@ function ColourGrid(props: GridProps) {
     let mapKey = getKey(rowId, colId);
     return tileMap.get(mapKey) ? tileMap.get(mapKey) : COLOR.DEFAULT_BLACK;
   };
-
+  /* set Tile color based on all of it's shined sources */
   const setTileColor = (rowId: number, colId: number) => {
     let shineColors = [];
     let newColor: number[] = [0, 0, 0];
     let shineColor;
-    // had to modify tsconfig to target es6 to Iterate through keys
+    // Array of all the sources that effect this tile
     let shinedSource = [];
+    // had to modify tsconfig to target es6 to Iterate through keys
     for (let key of sourceMap.keys()) {
       let ids = key.split("|");
       let sourceRow = parseInt(ids[0]);
@@ -189,7 +189,10 @@ function ColourGrid(props: GridProps) {
     return newColor;
   };
 
-  const fillTile = (sourceRowId: number, sourceColId: number) => {
+  const updateSourceShinedTiles = (
+    sourceRowId: number,
+    sourceColId: number
+  ) => {
     let newColor: number[];
     let mapKey: string;
     if (sourceRowId === 0 || sourceRowId === props.gridHeight) {
