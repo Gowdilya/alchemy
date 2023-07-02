@@ -287,14 +287,18 @@ function ColourGrid(props: GridProps) {
   /** Note the top and bottom row only has circles Tiles, so we use the createCirclesHorizontal, first and last  */
   return (
     <div>
-      <div>
+      <div style={{ textAlign: `left` }}>
         Closest color:
         <Square color={getTileColor(closestIndex.rowId, closestIndex.colId)} />
         {"\u0394" + "=" + convertedDelta() + "%"}
       </div>
-      <div>{createSourceRow(0)}</div>
-      {createSourceTileRows()}
-      <div>{createSourceRow(props.gridHeight)}</div>
+      <div
+        style={{ overflow: `auto`, whiteSpace: `nowrap`, textAlign: `center` }}
+      >
+        <div>{createSourceRow(0)}</div>
+        {createSourceTileRows()}
+        <div>{createSourceRow(props.gridHeight)}</div>
+      </div>
     </div>
   );
 }

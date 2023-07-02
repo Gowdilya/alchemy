@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { useEffect, useState } from "react";
 import RGBAlchemy from "./components/RGBAlchemy";
 import Loading from "./components/Loading";
 

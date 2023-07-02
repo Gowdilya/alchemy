@@ -54,11 +54,14 @@ function RGBAlchemy(props: RGBProps) {
   };
 
   return (
-    <div className="RGB Alchemy">
+    <div
+      className="RGB Alchemy"
+      style={{ marginLeft: `20px`, marginTop: `20px` }}
+    >
       <b>RGB Alchemy</b>
       <div>User ID:{props.data.userId}</div>
       <div>Moves left:{props.data.maxMoves - moveCount}</div>
-      <div>
+      <div style={{ marginTop: `10px`, marginBottom: `10px` }}>
         Target color:
         <Square color={props.data.target} />
       </div>
