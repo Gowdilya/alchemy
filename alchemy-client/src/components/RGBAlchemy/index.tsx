@@ -37,7 +37,7 @@ function RGBAlchemy(props: RGBProps) {
   const popUpModal = () => {
     return (
       <dialog open={openDialog}>
-        <p>{win ? "YOU WIN" : "You Failed! Play again?"}</p>
+        <p>{win ? "You Win! Play again?" : "You Failed! Play again?"}</p>
         <form method="dialog">
           <button onClick={() => props.handlePlayAgain(props.data.userId)}>
             YES
