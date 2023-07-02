@@ -8,9 +8,10 @@ interface GridProps {
   gridWidth: number;
   targetColor: number[];
   moveCount: number;
-  handleMoveMade: () => void;
   reload: boolean;
-  handleReloaded: () => void;
+  moveMade: () => void;
+  reloaded: () => void;
+  win: () => void;
 }
 
 const DELTA_CONST = (1 / 255) * (1 / Math.sqrt(3));
@@ -47,7 +48,7 @@ function ColourGrid(props: GridProps) {
       rowId: 1,
       colId: 1,
     });
-    props.handleReloaded();
+    props.reloaded();
   }, [props.reload]);
 
   const allowTileDrop = props.moveCount > 2;
@@ -95,6 +96,9 @@ function ColourGrid(props: GridProps) {
       if (newDelta < oldDelta) {
         setClosestIndex({ rowId: rowId, colId: colId });
         setDelta(newDelta);
+        if (newDelta < 0.1) {
+          props.win();
+        }
       }
     }
   };
@@ -210,17 +214,17 @@ function ColourGrid(props: GridProps) {
       case 0:
         // set to red
         fillSource(rowId, colId, COLOR.RED);
-        props.handleMoveMade();
+        props.moveMade();
         break;
       case 1:
         // set to green
         fillSource(rowId, colId, COLOR.GREEN);
-        props.handleMoveMade();
+        props.moveMade();
         break;
       case 2:
         // set to blue
         fillSource(rowId, colId, COLOR.BLUE);
-        props.handleMoveMade();
+        props.moveMade();
         break;
 
       default:
@@ -231,7 +235,7 @@ function ColourGrid(props: GridProps) {
 
   const sourceDrop = (color: number[], rowId: number, colId: number) => {
     fillSource(rowId, colId, color);
-    props.handleMoveMade();
+    props.moveMade();
   };
 
   const createSourceRow = (rowId: number) => {

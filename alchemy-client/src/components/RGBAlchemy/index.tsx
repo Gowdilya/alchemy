@@ -16,6 +16,7 @@ function RGBAlchemy(props: RGBProps) {
   const [moveCount, setMoveCount] = useState<number>(0);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [reloadGrid, setReloadGrid] = useState<boolean>(false);
+  const [win, setWin] = useState<boolean>(false);
   // Reset on data change
   useEffect(() => {
     setMoveCount(0);
@@ -36,7 +37,7 @@ function RGBAlchemy(props: RGBProps) {
   const popUpModal = () => {
     return (
       <dialog open={openDialog}>
-        <p>You Failed! Play again?</p>
+        <p>{win ? "YOU WIN" : "You Failed! Play again?"}</p>
         <form method="dialog">
           <button onClick={() => props.handlePlayAgain(props.data.userId)}>
             YES
@@ -45,6 +46,11 @@ function RGBAlchemy(props: RGBProps) {
         </form>
       </dialog>
     );
+  };
+
+  const handleWin = () => {
+    setWin(true);
+    setOpenDialog(true);
   };
 
   return (
@@ -62,9 +68,10 @@ function RGBAlchemy(props: RGBProps) {
         gridHeight={props.data.height}
         targetColor={props.data.target}
         moveCount={moveCount}
-        handleMoveMade={handleMovePlus}
+        moveMade={handleMovePlus}
         reload={reloadGrid}
-        handleReloaded={() => setReloadGrid(false)}
+        reloaded={() => setReloadGrid(false)}
+        win={handleWin}
       />
     </div>
   );
