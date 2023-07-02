@@ -64,9 +64,9 @@ function App() {
   };
 
   const serverRecoveryPolling = (userID?: string) => {
-    setError(null);
     // Schedule a new loadData after the polling interval
     setTimeout(() => {
+      setError(null);
       if (userID) {
         loadUserGameData(userID);
       } else {
