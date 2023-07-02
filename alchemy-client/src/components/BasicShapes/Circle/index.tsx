@@ -12,7 +12,7 @@ function Circle(props: CircleProps) {
   return (
     <div
       title={props.color?.toString()}
-      className="circle"
+      className="h-7 w-7 inline-block border-2 border-solid border-lightgrey rounded-full"
       style={{ backgroundColor: `rgb(${props.color})` }}
     ></div>
   );

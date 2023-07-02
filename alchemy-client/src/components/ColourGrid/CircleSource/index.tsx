@@ -1,6 +1,4 @@
 import Circle from "../../BasicShapes/Circle";
-import "./circleSource.css";
-import { MouseEvent } from "react";
 
 interface CircleSourceProps {
   rowId: number;
@@ -26,7 +24,7 @@ function CircleSource(props: CircleSourceProps) {
     <div
       onDragOver={enableDropping}
       onDrop={handleDrop}
-      className="circleSource"
+      className="inline-block m-0.5"
       onClick={() => props.handleSourceClick(props.rowId, props.colId)}
       style={{ cursor: props.isClickable ? "pointer" : "default" }}
     >

@@ -48,7 +48,7 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div>
       {isLoading ? (
         <Loading />
       ) : error ? (

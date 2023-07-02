@@ -1,5 +1,3 @@
-import "./square.css";
-
 interface SquareProps {
   color?: number[];
   selected?: boolean;
@@ -12,12 +10,11 @@ function Square(props: SquareProps) {
   props = { ...defaultProps, ...props };
   return (
     <div
-      className="square"
+      className={`h-7 w-7 inline-block border-2 ${
+        props.selected ? "border-red-500" : "border-lightgrey"
+      }`}
+      style={{ backgroundColor: `rgb(${props.color})` }} // Can't set dynamic values with tailwind
       title={props.color?.toString()}
-      style={{
-        backgroundColor: `rgb(${props.color})`,
-        border: `2px solid ${props.selected ? "red" : "lightgrey"}`,
-      }}
     ></div>
   );
 }

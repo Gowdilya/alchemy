@@ -21,7 +21,7 @@ function Loading() {
   }, []);
 
   return (
-    <div className="loading">
+    <div className="flex justify-center items-center h-screen">
       <Square color={colors[currentColorIndex]} />
       <Square color={colors[(currentColorIndex + 1) % colors.length]} />
       <Square color={colors[(currentColorIndex + 2) % colors.length]} />

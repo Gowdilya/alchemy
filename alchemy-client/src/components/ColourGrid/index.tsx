@@ -254,7 +254,7 @@ function ColourGrid(props: GridProps) {
         />
       );
     }
-    return gridElements;
+    return <div>{gridElements}</div>;
   };
 
   const createSourceTileRows = () => {
@@ -287,18 +287,20 @@ function ColourGrid(props: GridProps) {
 
   /** Note the top and bottom row only has circles Tiles, so we use the createCirclesHorizontal, first and last  */
   return (
-    <div>
-      <div style={{ textAlign: `left` }}>
+    <div className="mt-6">
+      <div className="mb-6 h-4">
         Closest color:
-        <Square color={getTileColor(closestIndex.rowId, closestIndex.colId)} />
+        <div className="inline relative top-1/2 ml-2">
+          <Square
+            color={getTileColor(closestIndex.rowId, closestIndex.colId)}
+          />
+        </div>
         {"Δ=" + convertedDelta() + "%"}
       </div>
-      <div
-        style={{ overflow: `auto`, whiteSpace: `nowrap`, textAlign: `center` }}
-      >
-        <div>{createSourceRow(0)}</div>
+      <div className="overflow-auto whitespace-nowrap text-center">
+        {createSourceRow(0)}
         {createSourceTileRows()}
-        <div>{createSourceRow(props.gridHeight)}</div>
+        {createSourceRow(props.gridHeight)}
       </div>
     </div>
   );

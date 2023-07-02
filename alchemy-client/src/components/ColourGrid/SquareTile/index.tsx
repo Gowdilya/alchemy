@@ -1,5 +1,4 @@
 import Square from "../../BasicShapes/Square";
-import "./squareTile.css";
 
 interface SquareTileProps {
   colId: number;
@@ -19,7 +18,7 @@ function SquareTile(props: SquareTileProps) {
     <div
       draggable={props.isDraggable}
       onDragStart={drag}
-      className={"squareTile"}
+      className={"inline-block m-0.5"}
       style={{ cursor: props.isDraggable ? "pointer" : "default" }}
     >
       <Square color={props.color} selected={props.isClosest} />

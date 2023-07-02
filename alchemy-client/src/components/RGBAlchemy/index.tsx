@@ -36,15 +36,29 @@ function RGBAlchemy(props: RGBProps) {
 
   const popUpModal = () => {
     return (
-      <dialog open={openDialog}>
-        <p>{win ? "You Win! Play again?" : "You Failed! Play again?"}</p>
-        <form method="dialog">
-          <button onClick={() => props.handlePlayAgain(props.data.userId)}>
-            YES
-          </button>
-          <button>NO</button>
-        </form>
-      </dialog>
+      openDialog && (
+        <div className="fixed inset-0 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <p className="text-center mb-4">
+              {win ? "You Win! Play again?" : "You Failed! Play again?"}
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={() => props.handlePlayAgain(props.data.userId)}
+                className="mr-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:bg-green-600"
+              >
+                YES
+              </button>
+              <button
+                onClick={() => setOpenDialog(false)}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:bg-red-600"
+              >
+                NO
+              </button>
+            </div>
+          </div>
+        </div>
+      )
     );
   };
 
@@ -54,16 +68,17 @@ function RGBAlchemy(props: RGBProps) {
   };
 
   return (
-    <div
-      className="RGB Alchemy"
-      style={{ marginLeft: `20px`, marginTop: `20px` }}
-    >
+    <div className="mt-6 mb-6 ml-6">
       <b>RGB Alchemy</b>
-      <div>User ID:{props.data.userId}</div>
-      <div>Moves left:{props.data.maxMoves - moveCount}</div>
-      <div style={{ marginTop: `10px`, marginBottom: `10px` }}>
+      <div className="mt-2 mb-2">User ID:{props.data.userId}</div>
+      <div className="mt-2 mb-2">
+        Moves left:{props.data.maxMoves - moveCount}
+      </div>
+      <div className="mt-2 mb-2 h-4">
         Target color:
-        <Square color={props.data.target} />
+        <div className="inline relative top-1/2 ml-2">
+          <Square color={props.data.target} />
+        </div>
       </div>
       {popUpModal()}
       <ColourGrid
