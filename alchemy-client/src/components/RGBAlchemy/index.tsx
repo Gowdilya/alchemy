@@ -70,9 +70,9 @@ function RGBAlchemy(props: RGBProps) {
   return (
     <div className="mt-6 mb-6 ml-6">
       <b>RGB Alchemy</b>
-      <div className="mt-2 mb-2">User ID:{props.data.userId}</div>
+      <div className="mt-2 mb-2">User ID: {props.data.userId}</div>
       <div className="mt-2 mb-2">
-        Moves left:{props.data.maxMoves - moveCount}
+        Moves left: {props.data.maxMoves - moveCount}
       </div>
       <div className="mt-2 mb-2 h-4">
         Target color:

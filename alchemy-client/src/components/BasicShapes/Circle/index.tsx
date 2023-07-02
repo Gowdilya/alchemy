@@ -1,5 +1,3 @@
-import "./circle.css";
-
 interface CircleProps {
   color?: number[];
 }
