@@ -75,11 +75,6 @@ function App() {
     }, pollingInterval);
   };
 
-  console.log("isServerAvailable:", isServerAvailable);
-  console.log("isLoading:", isLoading);
-  console.log("error:", error);
-  console.log("data:", data);
-
   return (
     <div>
       {isLoading ? (
