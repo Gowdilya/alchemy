@@ -20,6 +20,7 @@ function SquareTile(props: SquareTileProps) {
       draggable={props.isDraggable}
       onDragStart={drag}
       className={"squareTile"}
+      style={{ cursor: props.isDraggable ? "pointer" : "default" }}
     >
       <Square color={props.color} selected={props.isClosest} />
     </div>

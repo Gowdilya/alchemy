@@ -50,7 +50,8 @@ function ColourGrid(props: GridProps) {
     props.handleReloaded();
   }, [props.reload]);
 
-  const allowDrop = props.moveCount > 2;
+  const allowTileDrop = props.moveCount > 2;
+  const sourceClickable = props.moveCount < 2;
 
   const calculateDelta = (target: number[], obtained: number[]) => {
     return (
@@ -107,7 +108,7 @@ function ColourGrid(props: GridProps) {
           rowId={rowId}
           colId={i}
           color={getTileColor(rowId, i)}
-          isDraggable={allowDrop}
+          isDraggable={allowTileDrop}
           isClosest={closestIndex.rowId === rowId && closestIndex.colId === i}
         />
       );
@@ -244,6 +245,7 @@ function ColourGrid(props: GridProps) {
           handleSourceClick={sourceClick}
           color={getSourceColor(rowId, i)}
           handleSourceDrop={sourceDrop}
+          isClickable={sourceClickable}
         />
       );
     }
@@ -261,6 +263,7 @@ function ColourGrid(props: GridProps) {
             handleSourceClick={sourceClick}
             color={getSourceColor(i, 0)}
             handleSourceDrop={sourceDrop}
+            isClickable={sourceClickable}
           />
           {createTileRow(i)}
           <CircleSource
@@ -269,6 +272,7 @@ function ColourGrid(props: GridProps) {
             handleSourceClick={sourceClick}
             color={getSourceColor(i, props.gridWidth)}
             handleSourceDrop={sourceDrop}
+            isClickable={sourceClickable}
           />
         </div>
       );

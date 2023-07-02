@@ -8,6 +8,7 @@ interface CircleSourceProps {
   handleSourceClick: (rowId: number, colId: number) => void;
   color?: number[];
   handleSourceDrop: (color: number[], rowId: number, colId: number) => void;
+  isClickable: boolean;
 }
 
 function CircleSource(props: CircleSourceProps) {
@@ -27,6 +28,7 @@ function CircleSource(props: CircleSourceProps) {
       onDrop={handleDrop}
       className="circleSource"
       onClick={() => props.handleSourceClick(props.rowId, props.colId)}
+      style={{ cursor: props.isClickable ? "pointer" : "default" }}
     >
       <Circle color={props.color} />
     </div>
