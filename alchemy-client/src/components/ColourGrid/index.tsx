@@ -1,6 +1,6 @@
 import SquareTile from "./SquareTile";
 import CircleSource from "./CircleSource";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Square from "../BasicShapes/Square";
 
 interface GridProps {
@@ -43,12 +43,10 @@ function ColourGrid(props: GridProps) {
   useEffect(() => {
     setSourceMap(new Map());
     setTileMap(new Map());
-    setClosestIndex({
-      rowId: 1,
-      colId: 1,
-    });
+    setClosestIndex({ rowId: 1, colId: 1 });
+    setDelta(calculateDelta(props.targetColor, COLOR.DEFAULT_BLACK));
     props.reloaded();
-  }, [props.reload]);
+  }, [props.reload, props.targetColor]);
 
   const allowTileDrop = props.moveCount > 2;
   const sourceClickable = props.moveCount < 2;
@@ -152,7 +150,7 @@ function ColourGrid(props: GridProps) {
       let sourceRow = parseInt(ids[0]);
       let sourceCol = parseInt(ids[1]);
 
-      if (sourceRow == rowId || sourceCol == colId) {
+      if (sourceRow === rowId || sourceCol === colId) {
         shinedSource.push({ rowId: sourceRow, colId: sourceCol });
       }
     }
@@ -163,7 +161,7 @@ function ColourGrid(props: GridProps) {
       shineColor = COLOR.DEFAULT_BLACK;
       let ratio;
       let distance;
-      if (source.rowId == rowId) {
+      if (source.rowId === rowId) {
         distance = Math.abs(source.colId - colId);
         ratio = (props.gridWidth - distance + 1) / (props.gridWidth + 1);
       } else {
@@ -293,7 +291,7 @@ function ColourGrid(props: GridProps) {
       <div style={{ textAlign: `left` }}>
         Closest color:
         <Square color={getTileColor(closestIndex.rowId, closestIndex.colId)} />
-        {"\u0394" + "=" + convertedDelta() + "%"}
+        {"Δ=" + convertedDelta() + "%"}
       </div>
       <div
         style={{ overflow: `auto`, whiteSpace: `nowrap`, textAlign: `center` }}
