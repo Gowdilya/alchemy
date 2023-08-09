@@ -93,12 +93,16 @@ function ColourGrid(props: GridProps) {
       if (newDelta < oldDelta) {
         setClosestIndex({ rowId: rowId, colId: colId });
         setDelta(newDelta);
-        if (newDelta < 0.1) {
-          props.win();
-        }
       }
     }
   };
+
+  //Set Win Condition
+  useEffect(() => {
+    if (delta < 0.1) {
+      props.win();
+    }
+  }, [delta]);
 
   const createTileRow = (rowId: number) => {
     const gridElements = [];
